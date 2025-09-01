@@ -6,7 +6,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
   <link rel="icon" type="image/png" href="../assets/img/cb-icon.png">
   <title>
-    ClimBox - Map
+    Noabox - Map
   </title>
   <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
   <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
@@ -80,7 +80,7 @@
       <a class="navbar-brand px-4 py-3 m-0" href=" ../pages/dashboard.html ">
         <img src="../assets/img/cb-icon.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
         <span class="ms-1 text-sm fw-bold">
-          <span style="color: rgb(0, 0, 0);">Clim</span><span style="color: #00A8E8;">Box</span>
+          <span style="color: rgb(0, 0, 0);">Noa</span><span style="color: #00A8E8;">Box</span>
         </span>
       </a>
     </div>
@@ -527,7 +527,7 @@
         }
       }
     async function renderMap(){
-      const map = L.map('map').setView([-2.645088, 119.085449], 4.5);
+      const map = L.map('map').setView([-6.922674, 107.770712], 12); //indo: -2.645088, 119.085449,  4.5
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; OpenStreetMap contributors'
       }).addTo(map);
@@ -647,7 +647,7 @@
               document.write(new Date().getFullYear())
             </script>,
             made with <i class="fa fa-heart"></i> by
-            <a href=" " class="font-weight-bold" target="_blank">ClimBox</a>
+            <a href=" " class="font-weight-bold" target="_blank">Noabox</a>
             for a better climate.
           </div>
         </div>
