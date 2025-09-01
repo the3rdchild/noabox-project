@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/cb-icon.png">
+  <title>
+    ClimBox - Gafik
+  </title>
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+  <style>
+    .card-illustration {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 0.6rem;
+    }
+    .card-illustration svg {
+      max-width: 100%;
+      height: auto;
+      width: 96px; /* adjust size */
+      opacity: 0.98;
+    }
+    .card-illustration .pulse {
+      animation: pulse 700ms ease-in-out;
+    }
+    @keyframes pulse {
+      0% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.06); opacity: 0.95; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    body { background:#f0f3f6; font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+    .card { border: 0; border-radius: 10px; box-shadow: 0 2px 6px rgba(12,20,28,0.06); }
+    .card .small-chip { font-size: 0.7rem; padding: 0.2rem 0.45rem; border-radius: 999px; background: rgba(255,255,255,0.7); }
+    .card-satellite {
+      background: linear-gradient(180deg, #a8f4c8, #7fdcbf, #4fc4b4, #2fa4a4);
+      color: #0b1a13;
+    }
+    .card-satellite2 { background: linear-gradient(180deg,#d9f46b,#ffe8ae); color:#0b1a13; }
+    .card-buoy { background: linear-gradient(180deg,#cfe9ff,#0061c1); color:#fff; }
+    .card-buoy2 {
+      background: linear-gradient(180deg, #f5f5f5, #9e9e9e, #212121);
+      color: #fff;
+    }
+    .card-alert { background: linear-gradient(180deg, #ffecd2, #fcb69f); }
+    .card-wind { background: linear-gradient(180deg, #a8edea, #fed6fc); color:#21303a; }
+    .bar-strip { display:flex; gap:4px; margin-top:5rem; }
+    .bar-strip > div { height:8px; border-radius:3px; flex:1; }
+    .bar-strip2 { display:flex; gap:4px; margin-top:1rem; }
+    .bar-strip2 > div { height:8px; border-radius:3px; flex:1; }
+    .chip-live { background:#e6f7ff; color:#036; font-weight:700; padding: .25rem .5rem; border-radius:999px;   justify-content: center; align-items: center; }
+    .card .title { font-weight:700; font-size:.75rem; letter-spacing:.04em; }
+    .big-n { font-size: 25px; font-weight:800; line-height:1; }
+    .muted { color: #252525; font-size:.85rem; }
+    .donut-center { font-weight:700; font-size:1rem; text-align:center; }
+    .responsive-chart {
+    position: relative;
+    aspect-ratio: 16 / 8.8;
+    }
+    @media (max-width: 768px) {
+      .responsive-chart {
+        aspect-ratio: 1 / 1;
+      }
+    }
+  </style>
+</head>
+<body class="g-sidenav-show  bg-gray-100">
+ <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+  <div class="sidenav-header">
+    <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+    <a class="navbar-brand px-4 py-3 m-0" href=" ../pages/dashboard.html " >
+      <img src="../assets/img/cb-icon.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+      <span class="ms-1 text-sm fw-bold">
+        <span style="color: rgb(0, 0, 0);">Clim</span><span style="color: #00A8E8;">Box</span>
+      </span>
+    </a>
+  </div>
+    <hr class="horizontal dark mt-0 mb-2">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="dashboard.html">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="map.html">
+          <i class="material-symbols-rounded opacity-5">map</i>
+          <span class="nav-link-text ms-1">Map</span>
+        </a>
+      </li>
+        <li class="nav-item">
+          <a class="nav-link active bg-info text-white" href="graph.html">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Grafik</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="profile.html">
+            <i class="material-symbols-rounded opacity-5">person</i>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="sign-in.html">
+            <i class="material-symbols-rounded opacity-5">login</i>
+            <span class="nav-link-text ms-1">Sign In</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="sign-up.html">
+            <i class="material-symbols-rounded opacity-5">assignment</i>
+            <span class="nav-link-text ms-1">Sign Up</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="../pages/map.html">Map</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Tables</li>
+          </ol>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+          </div>
+          <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+            </li>
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center" style="margin-top: -1.5mm; margin-right: 5mm;">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+            <li class="nav-item dropdown pe-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="material-symbols-rounded">notifications</i>
+              </a>
+              <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+              </ul>
+            </li>
+            <li class="nav-item d-flex align-items-center" data-user-link>
+              <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+                <i class="material-symbols-rounded">account_circle</i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="row h-100">
+      <div class="col-12 col-xl-6 h-90 p-0">
+        <div id="map" style="width:100%; height:100%;"></div>
+      </div>
+      <div class="col-12 col-xl-6 h-50 d-flex flex-column">
+        <span id="location-name-display" class="font-weight-bold" style="margin-left: 20px; text-align: center;">
+            Pulau Komodo
+        </span>
+        <div class="flex-grow-1 p-3 responsive-chart">
+            <canvas id="chart1" style="width:100%; height:100%;"></canvas> <!-- Grafik 1 -->
+        </div>
+    </div>
+    <div class="col-12 col-xl-6 h-50 d-flex flex-column">
+        <div class="flex-grow-1 p-3 responsive-chart">
+            <canvas id="chart2" style="width:100%; height:100%;"></canvas> <!-- Grafik 2 -->
+        </div>
+    </div>
+    <div class="col-12 col-xl-6 h-50 d-flex flex-column">
+        <div class="flex-grow-1 p-3 responsive-chart">
+            <canvas id="chart3" style="width:100%; height:100%;"></canvas> <!-- Grafik 3 -->
+        </div>
+    </div>
+    </div>
+    <div class="container-fluid py-4">
+    <div class="row g-3">
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="card card-satellite h-100" data-group="meteorologi">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="title">METEOROLOGI</div>
+                <div class="big-n">--</div>
+                <div class="muted">Suhu Udara (C)</div>
+              </div>
+              <div class="small-chip">LIVE</div>
+            </div>
+            <hr style="border-color: rgba(0,0,0,0.06)">
+            <div class="row">
+              <div class="col-6">
+                <div class="muted">Arah Angin</div>
+                <div class="h6 mb-0 field-surface-temp">--</div>
+              </div>
+              <div class="col-6">
+                <div class="muted">Kecepatan Angin (km/h)</div>
+                <div class="h6 mb-0 field-historical-max">--</div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="muted">Kelembaban Udara (%)</div>
+              <div class="fw-bold field-note">--</div>
+            </div>
+            <div class="ms-auto2" style="margin-top: 5px;">
+              <svg width="270" height="100" viewBox="0 0 300 100" fill="none" role="img" aria-label="wind waves">
+                <path d="M0 50 C30 30, 60 70, 90 50 S150 30, 180 50 S240 70, 270 50 S330 30, 360 50" 
+                      stroke="#c0ffa3" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M0 70 C30 50, 60 90, 90 70 S150 50, 180 70 S240 90, 270 70 S330 50, 360 70" 
+                      stroke="#7fdc7f" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M0 30 C30 10, 60 50, 90 30 S150 10, 180 30 S240 50, 270 30 S330 10, 360 30" 
+                      stroke="#bfe64f" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="card card-buoy h-100" data-group="presipitasi">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div class="title text-dark">PRESIPITASI</div>
+              <div class="text-dark small-chip">LIVE</div>
+            </div>
+            <div class="mt-2">
+              <div class="big-n h3 mb-0 bold">--</div>
+              <div class="muted">Intensitas Hujan (mm/jam)</div>
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.14)">
+            <div class="mt-2">
+              <div class="h2 mb-0 field-alt">--</div>
+              <div class="muted">Jarak Permukaan Air Laut (cm)</div>
+            </div>
+            <div class="group-metrics mt-3"></div>
+            <div class="muted mt-2 last-updated">Last data received: --</div>
+            <div class="d-flex justify-content-center align-items-end" style="height:100px; margin-top: 25px;">
+              <svg width="270" height="100" viewBox="0 0 270 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="rain intensity">
+                <rect x="0" y="75" width="270" height="8" rx="4" fill="rgba(255,255,255,0.4)"></rect>
+                <path d="M30 20c0 10-10 10-10 0s10-10 10 0z" fill="#ffffff" opacity="0.9"/>
+                <path d="M60 25c0 10-10 10-10 0s10-10 10 0z" fill="#e0f7fa"/>
+                <path d="M90 31c0 10-10 10-10 0s10-10 10 0z" fill="#b2ebf2"/>
+                <path d="M120 36c0 10-10 10-10 0s10-10 10 0z" fill="#80deea"/>
+                <path d="M150 42c0 10-10 10-10 0s10-10 10 0z" fill="#4dd0e1"/>
+                <path d="M180 48c0 10-10 10-10 0s10-10 10 0z" fill="#26c6da"/>
+                <path d="M210 53c0 10-10 10-10 0s10-10 10 0z" fill="#00acc1"/>
+                <path d="M240 59c0 10-10 10-10 0s10-10 10 0z" fill="#00838f"/>
+                <text x="0" y="100" font-size="12" fill="#fff">0 mm/h</text>
+                <text x="100" y="100" font-size="12" fill="#fff">20 mm/h</text>
+                <text x="210" y="100" font-size="12" fill="#fff"> >50 mm/h</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="card card-alert h-100" data-group="kualitas_fisika">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="title text-dark">KUALITAS FISIKA</div>
+              <div class="small-chip">LIVE</div>
+            </div>
+            <div class="d-flex align-items-center mt-3">
+              <svg width="300" height="150" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#ffd166" stroke-width="8"></circle>  
+                <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#256fff" stroke-width="8" stroke-dasharray="20 70" stroke-dashoffset="60" transform="rotate(71 21 21)"></circle>
+                <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#EDEdED" stroke-width="8" stroke-dasharray="45 75" stroke-dashoffset="60" transform="rotate(-180 21 21)"></circle>
+                <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#00CCB5" stroke-width="8" stroke-dasharray="25 75" stroke-dashoffset="25" transform="rotate(-80 21 21)"></circle>
+                <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#ff3b6b" stroke-width="8" stroke-dasharray="14 100" stroke-dashoffset="-5" transform="rotate(-50 21 21)"></circle>
+                <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#140301" stroke-width="8" stroke-dasharray="5 100" stroke-dashoffset="-5" transform="rotate(-0 21 21)"></circle>
+                <g id="arrow-pointer" transform="rotate(0 21 21)">
+                  <line x1="21" y1="21" x2="21" y2="5" stroke="#5E6969" stroke-width="2" stroke-linecap="round"/>
+                  <polygon points="19,5 23,5 21,0" fill="#5E6969"/>
+                  <circle cx="21" cy="21" r="2" fill="#5E6969"/>
+                </g>
+              </svg>
+            </div>
+            <div class="d-flex align-items-center mt-3">
+              <div class="row w-100 gx-2 align-items-center">
+                <div class="col-6 d-flex align-items-center">
+                  <div>
+                    <div class="h6 mb-0">Suhu Air (C)</div>
+                    <div class=" h3 display-6 fw-bold big-n">--</div>
+                  </div>
+                </div>
+                <div class="col-6 text-end">
+                  <div class="h6 mb-0">EC (mS/cm)</div>
+                  <div class="h3 display-6 fw-bold field-ec-big">--</div>
+                </div>
+              </div>
+            </div>
+            <div class="muted"> Suhu Rata-Rata Air Siang Hari: 25-32°C </div>
+            <div class="mt-2">
+              <div class="muted small field-coords">Lat: --, Lon: --</div>
+            </div>
+            <div class="mt-2">
+              <div class="muted last-updated">Last data received: --</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="card card-wind h-100" data-group="kualitas_kimia_dasar">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div class="title">KUALITAS KIMIA DASAR</div>
+              <div class="small-chip">LIVE</div>
+            </div>
+            <div class="mt-2">
+              <div class="big-n">--</div>
+              <div class="muted" style="margin-top: 4px;">TDS (ppm)</div>
+            </div>
+            <hr>
+            <div class="d-flex">
+              <div>
+                <div class="mb-0 fw-bold">pH Rata-Rata:</div>
+                <div class="muted">7,5 - 8,4</div>
+                <div class="mb-0 fw-bold" style="margin-top: 4px;">TDS Rata-Rata:</div>
+                <div class="muted">30k ppm - 35k ppm</div>
+              </div>
+              <div class="ms-auto">
+                <svg width="80" height="80" viewBox="0 0 24 24" fill="none" role="img" aria-label="chemical flask">
+                  <path d="M9 2v6l-4 8a2 2 0 0 0 1.8 3h10.4a2 2 0 0 0 1.8-3l-4-8V2" stroke="#7f8c8d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M9 8h6" stroke="#7f8c8d" stroke-width="1.6" stroke-linecap="round"/>
+                  <path d="M10 14h4" stroke="#7f8c8d" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+              </div>
+            </div>
+            <div class="group-metrics mt-3"></div>
+            <div class="muted mt-2 last-updated" style="margin-top: 20px;">Last data received: --</div>
+            </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="card card-satellite2 h-100" data-group="kualitas_kimia_lanjut">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start">
+              <div>
+                <div class="title">KUALITAS KIMIA LANJUT</div>
+                <div class="big-n field-primary">--</div>
+                <div class="muted" style="margin-top: 4px;">DO (mg/L)</div>
+              </div>
+              <div class="small-chip">LIVE</div>
+            </div>
+            <hr style="border-color: rgba(0,0,0,0.06)">
+              <div class="col-8">
+                <div class="h6 mb-0 ">Pompa</div>
+                <div class="mb-0 field-secondary">--</div>
+              </div>
+            <div class="mt-3">
+              <div class="group-metrics mt-3"></div>
+              <div class="h6 mb-0 ">Oksigen Terlarut</div>
+              <div class="mb-0">~5 hingga ~8 mg/L</div>
+              <div class="muted mt-2 last-updated">Last data received: --</div>
+            </div>
+            <div class="bar-strip2" aria-hidden="true">
+              <svg width="100%" height="40" viewBox="0 0 240 40" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sea-surface oxygen [mg/L]">
+                <defs>
+                  <linearGradient id="oxygenGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#e27ea6"/>
+                    <stop offset="10%" stop-color="#c88bd0"/>
+                    <stop offset="20%" stop-color="#8fa7e0"/>
+                    <stop offset="30%" stop-color="#5ec4d4"/>
+                    <stop offset="40%" stop-color="#4fdc9e"/>
+                    <stop offset="50%" stop-color="#7edc4f"/>
+                    <stop offset="60%" stop-color="#d4c94f"/>
+                    <stop offset="70%" stop-color="#f4a64f"/>
+                    <stop offset="80%" stop-color="#e86b3f"/>
+                    <stop offset="90%" stop-color="#d84a3f"/>
+                    <stop offset="100%" stop-color="#e27ea6"/>
+                  </linearGradient>
+                </defs>
+                <rect x="0" y="0" width="240" height="20" fill="url(#oxygenGradient)" />
+                <g stroke="#333" stroke-width="1">
+                  <line x1="0" y1="20" x2="0" y2="25"/>
+                  <line x1="24" y1="20" x2="24" y2="25"/>
+                  <line x1="48" y1="20" x2="48" y2="25"/>
+                  <line x1="72" y1="20" x2="72" y2="25"/>
+                  <line x1="96" y1="20" x2="96" y2="25"/>
+                  <line x1="120" y1="20" x2="120" y2="25"/>
+                  <line x1="144" y1="20" x2="144" y2="25"/>
+                  <line x1="168" y1="20" x2="168" y2="25"/>
+                  <line x1="192" y1="20" x2="192" y2="25"/>
+                  <line x1="216" y1="20" x2="216" y2="25"/>
+                  <line x1="240" y1="20" x2="240" y2="25"/>
+                </g>
+                <text x="0"   y="38" font-size="10" fill="#333">5.0</text>
+                <text x="24"  y="38" font-size="10" fill="#333">5.3</text>
+                <text x="48"  y="38" font-size="10" fill="#333">5.6</text>
+                <text x="72"  y="38" font-size="10" fill="#333">5.9</text>
+                <text x="96"  y="38" font-size="10" fill="#333">6.2</text>
+                <text x="120" y="38" font-size="10" fill="#333">6.5</text>
+                <text x="144" y="38" font-size="10" fill="#333">6.8</text>
+                <text x="168" y="38" font-size="10" fill="#333">7.1</text>
+                <text x="192" y="38" font-size="10" fill="#333">7.4</text>
+                <text x="216" y="38" font-size="10" fill="#333">7.7</text>
+                <text x="232" y="38" font-size="10" fill="#333">8.0</text>
+              </svg>
+            </div>
+            <div class="muted" style="margin-left: 27%; margin-top: 2px;">Dissolve oxygen mg/L</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4 col-lg-2">
+        <div class="card card-buoy2 h-100" data-group="kualitas_turbiditas">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <div class="title text-dark">KUALITAS TURBIDITAS</div>
+              <div class="small-chip text-dark">LIVE</div>
+            </div>
+            <div class="mt-2">
+              <div class="big-n h3 mb-0 bold">--</div>
+              <div class="muted">TSS (mg/l)</div>
+            </div>
+            <div class="d-flex justify-content-between">
+            </div>
+            <hr style="border-color: rgba(255,255,255,0.14)">
+            <div class="mt-2">
+              <div class="h6 mb-0 ">TSS (Total Suspended Solids)</div>
+              <div class="mb-0 text-dark">~40 hingga ~400 mg/l </div>
+            </div>
+            <div class="group-metrics mt-3"></div>
+            <div class="muted mt-2 last-updated">Last data received: --</div>
+            <div class="d-flex justify-content-center align-items-end" style="height:100px; margin-top: 25px;">
+              <svg width="270" height="100" viewBox="0 0 270 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="TSS Turbidity">
+                <rect x="0" y="78" width="270" height="10" rx="5" fill="rgba(255,255,255,0.4)"></rect>
+                <rect x="10"  y="55" width="25" height="20" fill="#f5f5f5" />
+                <rect x="45"  y="45" width="25" height="30" fill="#dcdcdc" />
+                <rect x="80"  y="35" width="25" height="40" fill="#bdbdbd" />
+                <rect x="115" y="25" width="25" height="50" fill="#9e9e9e" />
+                <rect x="150" y="15" width="25" height="60" fill="#757575" />
+                <rect x="185" y="10" width="25" height="65" fill="#424242" />
+                <rect x="220" y="5"  width="25" height="70" fill="#212121" />            
+                <text x="12"  y="100" font-size="10" fill="#fff">40</text>
+                <text x="85"  y="100" font-size="10" fill="#fff">150</text>
+                <text x="225" y="100" font-size="10" fill="#fff">400</text>
+              </svg>
+            </div>
+            <div class="muted text-white" style="margin-left: 27%; margin-top: 2px;">Semakin Tercemar -></div>          
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer class="footer py-4  ">
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-lg-between">
+        <div class="col-lg-6 mb-lg-0 mb-4">
+          <div class="copyright text-center text-sm text-muted text-lg-start">
+            © <script>
+              document.write(new Date().getFullYear())
+            </script>,
+            made with <i class="fa fa-heart"></i> by
+            <a href=" " class="font-weight-bold" target="_blank">ClimBox</a>
+            for a better climate.
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+            <li class="nav-item">
+              <a href=" " class="nav-link text-muted" target="_blank">Creative Tim</a>
+            </li>
+            <li class="nav-item">
+              <a href=" " class="nav-link text-muted" target="_blank">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a href=" " class="nav-link text-muted" target="_blank">Blog</a>
+            </li>
+            <li class="nav-item">
+              <a href=" " class="nav-link pe-0 text-muted" target="_blank">License</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../assets/js/map-live.js"></script>
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="module">
+    const ctx1 = document.getElementById('chart1').getContext('2d');
+    const ctx2 = document.getElementById('chart2').getContext('2d');
+    const ctx3 = document.getElementById('chart3').getContext('2d');
+    const chart1 = new Chart(ctx1, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Humidity (%)',
+            data: [],
+            borderColor: 'green',
+            fill: false,
+          },
+          {
+            label: 'Air Temp (°C)',
+            data: [],
+            borderColor: 'orange',
+            fill: false,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            title: {
+                display: true,
+                text: 'Temperature'
+            }
+          },
+          x: {
+            title: {
+                display: true,
+                text: 'Time'
+            }
+          }
+        }
+      }
+    });
+    window.chart1 = chart1;
+    const chart2 = new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'Water Temp (°C)',
+            data: [],
+            borderColor: 'blue',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 4,
+            yAxisID: 'y'
+          },
+          {
+            label: 'TSS (V)',
+            data: [],
+            borderColor: 'purple',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 4,
+            yAxisID: 'yTSS'
+          },
+          {
+            label: 'pH',
+            data: [],
+            borderColor: 'red',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 4,
+            yAxisID: 'y'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        spanGaps: false,
+        scales: {
+          x: {
+            title: { display: true, text: 'Time' }
+          },
+          y: {
+            type: 'linear',
+            position: 'left',
+            title: { display: true, text: 'Water Temp (°C) / pH' },
+            min: 0,
+            ticks: { stepSize: 5 }
+          },
+          yTSS: {
+            type: 'linear',
+            position: 'right',
+            title: { display: true, text: 'TSS (V)' },
+            grid: { drawOnChartArea: false },
+          }
+        },
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+    window.chart2 = chart2;
+    const chart3 = new Chart(ctx3, {
+      type: 'line',
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: 'DO (µg/L)',
+            data: [],
+            borderColor: 'cyan',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 4,
+            yAxisID: 'yDo'
+          },
+          {
+            label: 'EC (mS/cm)',
+            data: [],
+            borderColor: 'magenta',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 4,
+            yAxisID: 'yEc'
+          },
+          {
+            label: 'TDS (ppm)',
+            data: [],
+            borderColor: 'yellow',
+            fill: false,
+            tension: 0.2,
+            pointRadius: 4,
+            yAxisID: 'yEc'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        spanGaps: false,
+        scales: {
+          x: {
+            title: { display: true, text: 'Time' }
+          },
+          yDo: {
+            type: 'linear',
+            position: 'left',
+            title: { display: true, text: 'DO (µg/L)' }
+          },
+          yEc: {
+            type: 'linear',
+            position: 'right',
+            title: { display: true, text: 'EC (mS/cm) / TDS (ppm)' },
+            grid: { drawOnChartArea: false }
+          }
+        },
+        plugins: { legend: { position: 'top' } }
+      }
+    });
+    window.chart3 = chart3;
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationId = urlParams.get('location');
+      if (!locationId) {
+        window.location.href = '/pages/map.html';
+      }
+    function parseTs(ts) {
+      if (!ts) return null;
+    const isoTry = new Date(ts);
+      if (!isNaN(isoTry.getTime())) return isoTry;
+      try {
+        const parts = ts.split(' ');
+        const dParts = parts[0].split('/');
+        if (dParts.length === 3) {
+          const month = parseInt(dParts[0],10);
+          const day = parseInt(dParts[1],10);
+          const year = parseInt(dParts[2],10);
+          const t = parts[1] || '00:00:00';
+          const dt = new Date(year, month-1, day, ...t.split(':').map(n=>parseInt(n,10)));
+          if (!isNaN(dt.getTime())) return dt;
+        }
+      } catch(e){}
+      return new Date(ts);
+    }
+    async function loadCachedRowsForLocation(locationId, opts = {}) {
+    const MAX_DAYS = opts.days || 7;
+    if (!locationId) return [];
+    console.log('loadCachedRowsForLocation start for', locationId);
+    try {
+      const latestUrl = `/data/${encodeURIComponent(locationId)}/latest.json`;
+      const resp = await fetch(latestUrl, { cache: 'no-store' });
+      console.log('tried', latestUrl, 'status', resp.status, 'ct=', resp.headers.get('content-type'));
+      if (resp.ok) {
+        const ct = (resp.headers.get('content-type') || '').toLowerCase();
+        if (ct.includes('application/json') || ct.includes('text/json')) {
+          try {
+            const latest = await resp.json();
+            if (latest && latest.sheetName) {
+              const sheetFile = `/data/${encodeURIComponent(locationId)}/${encodeURIComponent(latest.sheetName)}.json`;
+              try {
+                const r = await fetch(sheetFile, { cache: 'no-store' });
+                console.log('tried', sheetFile, 'status', r.status);
+                if (r.ok) {
+                  const rows = await r.json();
+                  console.log('loaded rows from sheetFile count=', Array.isArray(rows)?rows.length:0);
+                  return normalizeAndSortRows(rows);
+                }
+              } catch (e) {
+                console.warn('failed fetching sheetFile', sheetFile, e);
+              }
+            } else {
+              console.log('latest.json parsed but no sheetName', latest);
+            }
+          } catch (e) {
+            console.warn('latest.json parse failed despite content-type json', e);
+          }
+        } else {
+          const text = await resp.text();
+          console.warn('latest.json response is not JSON — preview (first 400 chars):', text.slice(0,400));
+        }
+      } else {
+        console.log('latest.json not OK (status not 200)');
+      }
+    } catch (e) {
+      console.warn('loadCachedRowsForLocation: latest.json fetch failed', e);
+    }
+    try {
+      if (window.CLIMBOX_GRAPH_FETCH && typeof window.CLIMBOX_GRAPH_FETCH.fetchSheetViaGviz === 'function') {
+        try {
+          const locJsonPath = (window.CLIMBOX_GRAPH_FETCH.cfg && window.CLIMBOX_GRAPH_FETCH.cfg.LOCATIONS_JSON) ? window.CLIMBOX_GRAPH_FETCH.cfg.LOCATIONS_JSON : '../assets/data/locations.json';
+          const r = await fetch(locJsonPath, { cache: 'no-store' });
+          if (r.ok) {
+            const mappings = await r.json();
+            const candidate = (mappings || []).find(m => {
+              const id = (m.locationId || m.id || '').toString();
+              const name = (m.name || m.label || '').toString().toLowerCase();
+              return (locationId && id === String(locationId)) || (name === String(locationId).toLowerCase());
+            });
+            if (candidate) {
+              const sheetId = candidate.sheetId || candidate.sheetid || candidate.sheet;
+              if (sheetId) {
+                let sheetName = candidate.sheetName || candidate.sheetname || candidate.sheet;
+                if (!sheetName) sheetName = `data_${new Date().toISOString().slice(0,10)}`;
+                try {
+                  console.log('Attempting GViz fetch for sheetId', sheetId, 'sheetName', sheetName);
+                  const fetched = await window.CLIMBOX_GRAPH_FETCH.fetchSheetViaGviz(sheetId, sheetName);
+                  if (Array.isArray(fetched) && fetched.length) {
+                    console.log('GViz fetched rows count=', fetched.length);
+                    return normalizeAndSortRows(fetched);
+                  } else {
+                    console.log('GViz returned no rows');
+                  }
+                } catch (e) {
+                  console.warn('GViz fetch failed', e);
+                }
+              }
+            } else {
+              console.log('no mapping found in locations.json for', locationId);
+            }
+          }
+        } catch (e) {
+          console.warn('error trying GF.fetchSheetViaGviz path', e);
+        }
+      } else {
+        console.log('Graph-fetch (GF) not available or lacks fetchSheetViaGviz');
+      }
+    } catch (e) {
+      console.warn('GViz branch error', e);
+    }
+    const rowsAccum = [];
+    for (let i = 0; i < MAX_DAYS; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      const dateStr = d.toISOString().slice(0,10);
+      const candidate = `/data/${encodeURIComponent(locationId)}/sensorData_${dateStr}.json`;
+      try {
+        const resp = await fetch(candidate, { cache: 'no-store' });
+        console.log('tried', candidate, 'status', resp.status);
+        if (!resp.ok) continue;
+        const partial = await resp.json();
+        if (Array.isArray(partial)) rowsAccum.push(...partial);
+      } catch (e) {
+        console.warn('failed fetching', candidate, e);
+      }
+    }
+    if (rowsAccum.length) {
+      console.log('loaded rows from sensorData files, count=', rowsAccum.length);
+      return normalizeAndSortRows(rowsAccum);
+    }
+      console.log('loadCachedRowsForLocation: nothing found for', locationId);
+      return [];
+    }
+    function normalizeAndSortRows(rows) {
+      if (!rows || !Array.isArray(rows)) return [];
+      const normalized = rows.map(r => {
+        const ts = r.Timestamp || r.timestamp || r.time || r.cachedAt || null;
+        return Object.assign({}, r, { __tsDate: parseTs(ts) });
+      }).filter(r=> r.__tsDate && !isNaN(r.__tsDate.getTime()));
+      normalized.sort((a,b)=> a.__tsDate - b.__tsDate);
+      return normalized;
+    }
+    function NumberOrNull(x) {
+      if (x === null || x === undefined) return null;
+      if (typeof x === 'object') {
+        if (x instanceof Date && !isNaN(x.getTime())) return x.getTime(); 
+        x = String(x);
+      }
+      const s = String(x).trim();
+      if (!s) return null;
+      const sLower = s.toLowerCase();
+      if (['tidak mengukur', 'tidak_mengukur', 'na', 'n/a', 'n a', 'not measured', '-', '--', 'null'].includes(sLower)) return null;
+      const n = Number(s.replace(/,/g, ''));
+      return Number.isFinite(n) ? n : null;
+    }
+    function fmtLabelFromRow(row) {
+      const raw = (row.Timestamp || row.timestamp || row.time || row.cachedAt || row.__tsDate || '');
+      if (!raw) return '';
+      try {
+        const d = (raw instanceof Date) ? raw : new Date(raw);
+        if (!isNaN(d.getTime())) {
+          return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+        }
+      } catch(e){}
+      const s = String(raw);
+      return s.length > 10 ? s.slice(-8) : s;
+    }
+    function debugRowKeys(row, label = 'row') {
+    if (!row) { console.log('debugRowKeys: no row'); return; }
+    console.groupCollapsed(`debugRowKeys: ${label}`);
+    Object.keys(row).forEach(k => {
+      try {
+        console.log('key:', JSON.stringify(k), '=> normalized:', normalizeKey(k), ' value:', row[k]);
+      } catch(e){ console.log('key error', k, e); }
+    });
+      console.groupEnd();
+    }
+    function safeSetChartData(chart, labels, arrs) {
+      if (!chart || !chart.data) return;
+      try {
+        chart.data.labels = Array.isArray(labels) ? labels.slice() : [];
+        arrs.forEach((arr, idx) => {
+          if (!chart.data.datasets[idx]) return;
+          chart.data.datasets[idx].data = Array.isArray(arr) ? arr.slice() : [];
+        });
+        chart.update();
+      } catch (e) {
+        console.warn('safeSetChartData failed', e);
+      }
+    }
+    function rowHasAnyNumeric(row, candidates) {
+      if (!row || !Array.isArray(candidates)) return false;
+      for (const k of candidates) {
+        const v = row[k] !== undefined ? row[k] : row[ normalizeKey(k) ];
+        if (NumberOrNull(v) !== null) return true;
+      }
+      return false;
+    }
+    function fillChartsFromRows(rows) {
+      if (!Array.isArray(rows) || rows.length === 0) {
+        console.log('fillChartsFromRows: no rows provided');
+        return;
+      }
+      const last7 = rows.slice(-7);
+      const labels1 = last7.map(r => (r.Timestamp || r.timestamp || r.time || r.cachedAt) ?? '');
+      const airTempArr = last7.map(r => NumberOrNull(r['Air Temp (C)'] ?? r['air_temp'] ?? r['Temp udara'] ?? r['temperature'] ?? r['AirTemp']));
+      const humidityArr = last7.map(r => NumberOrNull(r['Air Humidity (%)'] ?? r['Humidity'] ?? r['humidity']));
+      if (window.chart1) {
+        window.chart1.data.labels = labels1;
+        if (window.chart1.data.datasets[0]) window.chart1.data.datasets[0].data = humidityArr;
+        if (window.chart1.data.datasets[1]) window.chart1.data.datasets[1].data = airTempArr;
+        try { window.chart1.update(); } catch(e){ console.warn('chart1 update failed', e); }
+      }
+      const MAX_POINTS = 5;
+      const LOOKBACK = 40;
+      const chart2Keys = ['Water Temp (C)', 'water_temp', 'water temp', 'WaterTemp', 'TSS (V)', 'tss', 'pH', 'ph'];
+      const chart3Keys = ['DO (ug/L)', 'do', 'EC (ms/cm)', 'ec', 'TDS (ppm)', 'tds'];
+      function nk(s){ return String(s||'').trim().toLowerCase().replace(/\(.*?\)/g,'').replace(/[^a-z0-9]+/g,'_').replace(/^_+|_+$/g,''); }
+      function lookupField(row, candidates) {
+        if (!row) return null;
+        for (const c of candidates) {
+          if (row[c] !== undefined) return row[c];
+        }
+        const normToFind = candidates.map(c=>nk(c));
+        for (const rk of Object.keys(row)) {
+          const rkn = nk(rk);
+          if (normToFind.includes(rkn)) return row[rk];
+        }
+        return null;
+      }
+      function rowHasAnyNumericFor(row, candidates) {
+        for (const c of candidates) {
+          const v = lookupField(row, [c]);
+          if (NumberOrNull(v) !== null) return true;
+        }
+        for (const c of candidates) {
+          const v = lookupField(row, candidates);
+          if (NumberOrNull(v) !== null) return true;
+        }
+        return false;
+      }
+      function collectRecentNumericRows(candidates) {
+        const found = [];
+        let checked = 0;
+        for (let i = rows.length - 1; i >= 0 && checked < LOOKBACK; i--, checked++) {
+          const row = rows[i];
+          if (rowHasAnyNumericFor(row, candidates)) {
+            found.push(row);
+            if (found.length >= MAX_POINTS) break;
+          }
+        }
+        return found.reverse();
+      }
+      function buildAndFilterSeries(chosenRows, seriesDefs) {
+        const labels = chosenRows.map(r => {
+          if (r.Timestamp || r.timestamp || r.time || r.cachedAt) return (r.Timestamp || r.timestamp || r.time || r.cachedAt);
+          if (r.__tsDate) {
+            try {
+              const d = new Date(r.__tsDate);
+              return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+            } catch(e) { /* ignore */ }
+          }
+          return '';
+        });
+        const arrays = seriesDefs.map(sd => chosenRows.map(r => NumberOrNull(lookupField(r, sd.nameCandidates))));
+        const mask = labels.map((_, idx) => arrays.some(arr => arr[idx] !== null));
+        const filteredLabels = [];
+        const filteredArrays = arrays.map(()=>[]);
+        for (let i = 0; i < labels.length; i++) {
+          if (!mask[i]) continue;
+          filteredLabels.push(labels[i]);
+          for (let a = 0; a < arrays.length; a++) filteredArrays[a].push(arrays[a][i]);
+        }
+        return { labels: filteredLabels, arrays: filteredArrays, rawCount: labels.length, keptCount: filteredLabels.length };
+      }
+      const recentChart2 = collectRecentNumericRows(chart2Keys);
+      if (recentChart2.length > 0) {
+        const defs2 = [
+          { nameCandidates: ['Water Temp (C)', 'water_temp', 'water temp', 'WaterTemp'] },
+          { nameCandidates: ['TSS (V)', 'tss'] },
+          { nameCandidates: ['pH', 'ph'] }
+        ];
+        const { labels: labels2, arrays: [wt, tss, ph], rawCount, keptCount } = buildAndFilterSeries(recentChart2, defs2);
+        console.log(`chart2: found ${rawCount} candidate rows, kept ${keptCount} after filtering empty timestamps`, { wt, tss, ph });
+        if (window.chart2) {
+          window.chart2.data.labels = labels2.map(s => {
+            try {
+              const d = parseTs(s);
+              return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+            } catch(e){
+              return s;
+            }
+          });
+          if (window.chart2.data.datasets[0]) window.chart2.data.datasets[0].data = wt;
+          if (window.chart2.data.datasets[1]) window.chart2.data.datasets[1].data = tss;
+          if (window.chart2.data.datasets[2]) window.chart2.data.datasets[2].data = ph;
+          const validTss = tss.filter(x => x !== null);
+          if (validTss.length) {
+            const maxT = Math.max(...validTss);
+            if (!isNaN(maxT) && window.chart2.options && window.chart2.options.scales && window.chart2.options.scales.yTSS) {
+              window.chart2.options.scales.yTSS.suggestedMax = Math.ceil(maxT * 1.15);
+            }
+          }
+          try { window.chart2.update(); } catch(e){ console.warn('chart2 update failed', e); }
+        }
+      } else {
+        console.log('chart2: no recent numeric measurements found -> chart left unchanged');
+      }
+      const recentChart3 = collectRecentNumericRows(chart3Keys);
+      if (recentChart3.length > 0) {
+        const defs3 = [
+          { nameCandidates: ['DO (ug/L)', 'do'] },
+          { nameCandidates: ['EC (ms/cm)', 'ec'] },
+          { nameCandidates: ['TDS (ppm)', 'tds'] }
+        ];
+        const { labels: labels3, arrays: [doArr, ecArr, tdsArr], rawCount, keptCount } = buildAndFilterSeries(recentChart3, defs3);
+        console.log(`chart3: found ${rawCount} candidate rows, kept ${keptCount} after filtering empty timestamps`, { doArr, ecArr, tdsArr });
+        if (window.chart3) {
+          window.chart3.data.labels = labels3.map(s => {
+            try {
+              const d = parseTs(s);
+              return `${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}:${String(d.getSeconds()).padStart(2,'0')}`;
+            } catch(e){
+              return s;
+            }
+          });
+          if (window.chart3.data.datasets[0]) window.chart3.data.datasets[0].data = doArr;
+          if (window.chart3.data.datasets[1]) window.chart3.data.datasets[1].data = ecArr;
+          if (window.chart3.data.datasets[2]) window.chart3.data.datasets[2].data = tdsArr;
+          const validEc = ecArr.filter(x => x !== null);
+          const validTds = tdsArr.filter(x => x !== null);
+          const combined = validEc.concat(validTds);
+          if (combined.length && window.chart3.options && window.chart3.options.scales && window.chart3.options.scales.yEc) {
+            const mx = Math.max(...combined);
+            window.chart3.options.scales.yEc.suggestedMax = Math.ceil(mx * 1.15);
+          }
+          try { window.chart3.update(); } catch(e){ console.warn('chart3 update failed', e); }
+        }
+      } else {
+        console.log('chart3: no recent numeric measurements found -> chart left unchanged');
+    }
+    }
+    window.CLIMBOX_CONFIG = {
+        LOCATION_ID: locationId || 'Climbox1',
+        POLL_SECONDS: 30,
+        MQTT_WS: 'wss://test.mosquitto.org:8081/mqtt',
+        MQTT_USERNAME: '',
+        MQTT_PASSWORD: '',
+        MQTT_TOPIC_BASE: 'climbox',
+        MQTT_AUTO_DISABLE_POLL: true
+    };
+    const locations = [
+          {
+              id: ' ',
+              name: ' ',
+              coord: [],
+              country: ' '
+          }
+      ];
+    async function loadLocations() {
+      try {
+        const response = await fetch('../assets/data/locations.json');
+        const data = await response.json();
+        const foundLocation = data.find(location => location.locationId === locationId);
+        if (foundLocation) {
+          document.getElementById('location-name-display').textContent = foundLocation.name;
+          initMap(foundLocation);
+        } else {
+          console.warn('Location not found:', locationId);
+        }
+      } catch (error) {
+        console.error('Error loading locations:', error);
+      }
+    }
+    function initMap(loc) {
+      const map = L.map('map').setView(loc.coord, 6);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      const mk = L.marker(loc.coord).addTo(map);
+      mk.bindPopup(`
+        <strong>${loc.name}</strong><br>
+        <small>${loc.country}</small><br>
+        <small>Lat: ${loc.coord[0]}, Lon: ${loc.coord[1]}</small>
+      `);
+    }
+    function renderLocationList(locations) {
+      const el = document.getElementById('location-list');
+      if (!el) return;
+      el.innerHTML = '';
+      locations.forEach(loc => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center list-group-item-action';
+        li.textContent = loc.name;
+        el.appendChild(li);
+      });
+    }
+  
+    loadLocations();
+  </script>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+  <script src="../assets/js/graph-fetch.js"></script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      const navbar = document.getElementById('navbarBlur');
+      if (navbar) {
+        navbar.classList.add('position-sticky', 'top-1', 'z-index-sticky');
+        navbar.setAttribute('data-scroll', 'true');
+      }
+    });
+  </script>
+  <script type="module" src="/services/firebase-config.js"></script>
+  <script type="module" src="/services/auth-ui.js"></script>
+  <script type="module" src="/services/setup-users.js"></script>
+  <script type="module" src="/services/firestore-and-profile.js"></script>
+  <script type="module" src="/services/auth-forms-and-profile-ui.js"></script>
+  <script src="../assets/js/notifications.js"></script>
+</body>
+</html>

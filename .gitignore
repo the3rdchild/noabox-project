@@ -1,0 +1,16 @@
+node_modules
+package-lock.json
+.firebaserc
+.idx
+.firebase
+firebase-debug.log
+db-notes.txt
+firestore.js
+auth.js
+serviceAccount.json
+firebase-debug.log
+.env
+users.json
+firebase-config.js
+firestore.rules
+firestore.indexes.json

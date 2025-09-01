@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="./assets/img/cb-icon.png">
+  <title>ClimBox - Dashboard</title>
+</head>
+<body>
+  <div id="app"></div>
+
+  <script>
+    const routes = {
+      "/": "/pages/dashboard.html", // Default
+      "/dashboard": "/pages/dashboard.html",
+      "/map": "/pages/map.html",
+      "/notifications": "/pages/notifications.html",
+      "/profile": "/pages/profile.html",
+      "/sign-in": "/pages/sign-in.html",
+      "/sign-up": "/pages/sign-up.html"
+    };
+
+    const appDiv = document.getElementById('app');
+
+    const loadPage = async (path) => {
+      const route = routes[path] || routes["/"];
+      try {
+        const response = await fetch(route);
+        const html = await response.text();
+        appDiv.innerHTML = html;
+        window.scrollTo(0, 0); // reset scroll position
+      } catch (error) {
+        // console.error("Error loading page:", error);
+        appDiv.innerHTML = "<p>Error loading page.</p>";
+      }
+    };
+
+    const handleLocationChange = () => {
+      const path = window.location.pathname;
+      loadPage(path);
+    };
+
+    // Initial load
+    handleLocationChange();
+
+    // Back/forward
+    window.addEventListener("popstate", handleLocationChange);
+
+    // Intercept internal <a> clicks
+    document.addEventListener("click", (e) => {
+      const target = e.target.closest("a");
+      if (target && target.href.startsWith(window.location.origin)) {
+        const toPath = new URL(target.href).pathname;
+        if (routes[toPath]) {
+          e.preventDefault();
+          window.history.pushState({}, "", toPath);
+          loadPage(toPath);
+        }
+      }
+    });
+  </script>
+</body>
+</html>

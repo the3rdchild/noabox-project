@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../assets/img/cb-icon.png">
+  <title>
+    ClimBox - Map
+  </title>
+  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700,900" />
+  <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,0,0" />
+  <link id="pagestyle" href="../assets/css/material-dashboard.css?v=3.2.0" rel="stylesheet" />
+  <style> 
+    .responsive-chart {
+      aspect-ratio: 16 / 8.8;
+      width: 100%;
+      height: auto;
+    }
+  @media (max-width: 768px) {
+    .responsive-chart {
+      aspect-ratio: 1 / 1;
+    }
+  }
+  #map {
+    aspect-ratio: 16 / 8.8;
+    width: 100%;
+    height: 100%;
+  }
+
+  @media (max-width: 768px) {
+    #map {
+      aspect-ratio: 1 / 1;
+      width: 100%;
+      height: auto;
+    }
+  }
+  .leaflet-popup.custom-location-popup .leaflet-popup-content-wrapper {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    pointer-events: none; 
+  }
+  .leaflet-popup-content {
+    pointer-events: auto; 
+  }
+  .leaflet-popup-tip {
+    display: none !important;
+  }
+  .leaflet-popup.custom-location-popup {
+    max-width: 320px !important;
+  }
+  .leaflet-popup.custom-location-popup .leaflet-popup-close-button {
+    top: 26px !important;
+    right: 39px !important;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    width: 29px;
+    height: 29px;
+    line-height: 25px;
+    font-size: 35px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.573);
+  }
+  .leaflet-popup-content [id^="arrow-pointer"] {
+    transition: transform 0.2s linear;
+  }
+  .leaflet-popup.custom-location-popup .leaflet-popup-close-button:hover {
+    background: #f0f0f0;
+  }
+  </style>
+</head>
+<body class="g-sidenav-show  bg-gray-100">
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-radius-lg fixed-start ms-2  bg-white my-2" id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="fas fa-times p-3 cursor-pointer text-dark opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+      <a class="navbar-brand px-4 py-3 m-0" href=" ../pages/dashboard.html ">
+        <img src="../assets/img/cb-icon.png" class="navbar-brand-img" width="26" height="26" alt="main_logo">
+        <span class="ms-1 text-sm fw-bold">
+          <span style="color: rgb(0, 0, 0);">Clim</span><span style="color: #00A8E8;">Box</span>
+        </span>
+      </a>
+    </div>
+    <hr class="horizontal dark mt-0 mb-2">
+    <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/dashboard.html">
+            <i class="material-symbols-rounded opacity-5">dashboard</i>
+            <span class="nav-link-text ms-1">Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active bg-info text-white" href="../pages/map.html">
+            <i class="material-symbols-rounded opacity-5">map</i>
+            <span class="nav-link-text ms-1">Map</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/graph.html">
+            <i class="material-symbols-rounded opacity-5">table_view</i>
+            <span class="nav-link-text ms-1">Grafik</span>
+          </a>
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs text-dark font-weight-bolder opacity-5">Account pages</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/profile.html">
+            <i class="material-symbols-rounded opacity-5">person</i>
+            <span class="nav-link-text ms-1">Profile</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/sign-in.html">
+            <i class="material-symbols-rounded opacity-5">login</i>
+            <span class="nav-link-text ms-1">Sign In</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="../pages/sign-up.html">
+            <i class="material-symbols-rounded opacity-5">assignment</i>
+            <span class="nav-link-text ms-1">Sign Up</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+  <nav class="navbar navbar-main navbar-expand-lg px-0 mx-3 shadow-none border-radius-xl" id="navbarBlur" data-scroll="true">
+    <div class="container-fluid py-1 px-3">
+      <nav aria-label="breadcrumb">
+        <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+          <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="../pages/dashboard.html">Home</a></li>
+          <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Map</li>
+        </ol>
+      </nav>
+      <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+        <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+        </div>
+        <ul class="navbar-nav d-flex align-items-center  justify-content-end">
+          <li class="nav-item d-xl-none ps-3 d-flex align-items-center" style="margin-top: -1.5mm; margin-right: 5mm;">
+            <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+              <div class="sidenav-toggler-inner">
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+                <i class="sidenav-toggler-line"></i>
+              </div>
+            </a>
+          </li>
+          <li class="nav-item dropdown pe-3 d-flex align-items-center">
+            <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="material-symbols-rounded">notifications</i>
+            </a>
+            <ul class="dropdown-menu  dropdown-menu-end  px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton">
+            </ul>
+          </li>
+          <li class="nav-item d-flex align-items-center" data-user-link>
+            <a href="../pages/sign-in.html" class="nav-link text-body font-weight-bold px-0">
+              <i class="material-symbols-rounded">account_circle</i>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <div class="container-fluid px-2 px-md-4" style="height:87vh;">
+    <div class="row h-100">
+      <div class="col-12 col-xl-6 p-0">
+        <div id="map"></div>
+      </div>
+      <div class="col-12 col-xl-6 h-50 d-flex flex-column" style="margin-top: 20px;">
+          <div style="
+          display: flex;
+          gap: 8px;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+        ">
+            <a class="font-weight-bold">Lihat Data</a>
+            <a class="font-weight-bold">[Pilih Lokasi Sensor]</a>
+            <a class="font-weight-bold">Lebih Lanjut...</a>
+          </div>
+        <div class="flex-grow-1 p-3 responsive-chart">
+          <canvas id="chart" style="width:100%; height:100%;"></canvas>
+        </div>   
+        <div class="p-3 border-top" style="background:#f8f9fa;">
+          <h6>Daftar Lokasi Sensor</h6>
+          <ul id="location-list" class="list-group list-group-flush">
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="../assets/js/map-live.js"></script>
+  <script type="module">
+    function todayDateString(){ return new Date().toISOString().slice(0,10); }
+    function pad(n){ return String(n).padStart(2,'0'); }
+    function waitFor(condFn, timeout = 3000, interval = 80){
+      const start = Date.now();
+      return new Promise(resolve=>{
+        (function tick(){
+          try { if (condFn()) return resolve(true); } catch(e){}
+          if (Date.now() - start > timeout) return resolve(false);
+          setTimeout(tick, interval);
+        })();
+      });
+    }
+    async function fetchJsonNoStore(url){
+      const r = await fetch(url, { cache: 'no-store' });
+      if (!r.ok) throw new Error(`${url} ${r.status}`);
+      return r.json();
+    }
+    async function loadCachedRowsForLocation(locationId, days=7){
+      if (!locationId) return [];
+      try {
+        const latest = await fetchJsonNoStore(`/data/${encodeURIComponent(locationId)}/latest.json`);
+        if (latest && latest.sheetName) {
+          const sheetFile = `/data/${encodeURIComponent(locationId)}/${encodeURIComponent(latest.sheetName)}.json`;
+          try {
+            const rows = await fetchJsonNoStore(sheetFile);
+            if (Array.isArray(rows)) return rows;
+          } catch(e){}
+        }
+      } catch(e){ /* ignore */ }
+      const acc = [];
+      for (let i=0;i<days;i++){
+        const d = new Date(); d.setDate(d.getDate()-i);
+        const ds = d.toISOString().slice(0,10);
+        const candidate = `/data/${encodeURIComponent(locationId)}/sensorData_${ds}.json`;
+        try {
+          const r = await fetch(candidate, { cache: 'no-store' });
+          if (!r.ok) continue;
+          const partial = await r.json();
+          if (Array.isArray(partial)) acc.push(...partial);
+        } catch(e){}
+      }
+      return acc;
+    }
+      function safeSetChart(chart, labels, datasetArrays){
+        if (!chart || !chart.data) return;
+        chart.data.labels = Array.isArray(labels) ? labels.slice() : [];
+        datasetArrays.forEach((arr, idx) => {
+          if (!chart.data.datasets[idx]) return;
+          chart.data.datasets[idx].data = Array.isArray(arr) ? arr.slice() : [];
+        });
+        try { chart.update(); } catch(e){ console.warn('safeSetChart update failed', e); }
+      }
+      function resolveSheetName(mapping){
+        if (!mapping) return `data_${todayDateString()}`;
+        const s = mapping.sheetName || mapping.sheetNameToken || '';
+        if (s && s.includes('{date}')) return s.replace('{date}', todayDateString());
+        if (s) return s;
+        return `data_${todayDateString()}`;
+      }
+      const GF = window.CLIMBOX_GRAPH_FETCH || null;
+      function normalizeKeyLocal(key) {
+      if (key === undefined || key === null) return '';
+      return String(key)
+        .replace(/\u00A0/g, ' ')
+        .trim()
+        .toLowerCase()
+        .replace(/\(.*?\)/g, '')
+        .replace(/[°µµgΛ\/\\]+/g,'')
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+    }
+    function pickFieldFromRow(row, candidates) {
+      if (!row) return null;
+      const candArr = Array.isArray(candidates) ? candidates : (candidates ? [candidates] : []);
+      const candNorms = candArr.map(c => normalizeKeyLocal(c)).filter(Boolean);
+      const normMap = {};
+      for (const actualKey of Object.keys(row)) {
+        const nk = normalizeKeyLocal(actualKey);
+        if (!normMap[nk]) normMap[nk] = actualKey;
+      }
+      for (const cn of candNorms) {
+        if (cn && normMap[cn]) return row[normMap[cn]];
+      }
+      for (const cn of candNorms) {
+        for (const nk of Object.keys(normMap)) {
+          if (!nk || !cn) continue;
+          if (nk.includes(cn) || cn.includes(nk)) return row[normMap[nk]];
+        }
+      }
+      for (const cn of candNorms) {
+        const tokens = cn.split('_').filter(Boolean);
+        if (!tokens.length) continue;
+        for (const nk of Object.keys(normMap)) {
+          if (tokens.every(t => nk.includes(t))) return row[normMap[nk]];
+        }
+      }
+      const heuristics = [
+        ['water','temp'],
+        ['water','temperature'],
+        ['temp','water'],
+        ['distance','mm'],
+        ['ultrasonic','distance'],
+        ['do','ug','l'],
+        ['air','temp'],
+      ];
+      for (const tokens of heuristics) {
+        for (const nk of Object.keys(normMap)) {
+          if (tokens.every(t => nk.includes(t))) return row[normMap[nk]];
+        }
+      }
+      for (const nk of Object.keys(normMap)) {
+        const val = row[normMap[nk]];
+        if (val !== null && val !== undefined && String(val).trim() !== '') return val;
+      }
+      return null;
+    }
+    function asNumberOrNullLocal(v) {
+      if (v === null || v === undefined) return null;
+      if (typeof v === 'number') return Number.isFinite(v) ? v : null;
+      let s = String(v).trim();
+      if (s === '') return null;
+      s = s.replace(/[°℃º]/g,'')      // temp symbols
+          .replace(/(ug|µg|mg|g|ppm|ms|mS|cm|mm|\/l|\/kg)/gi,'')
+          .replace(/[, ]+/g,'')
+          .replace(/[^\d\.\-eE+]/g,''); 
+      const n = Number(s);
+      return Number.isFinite(n) ? n : null;
+    }
+    function debugRowKeys(row) {
+      if (!row) { console.log('debugRowKeys: no row provided'); return; }
+      console.group('debugRowKeys');
+      Object.keys(row).forEach(k => {
+        console.log(`key: "${k}" => normalized: "${normalizeKeyLocal(k)}" value:`, row[k]);
+      });
+      console.groupEnd();
+    }
+    function fmtNumberLocal(v, unit='') {
+      const n = asNumberOrNullLocal(v);
+      if (n === null) return '--';
+      const round = Math.round(n * 10) / 10;
+      return unit ? `${round}${unit}` : String(round);
+    }
+    function safeGetLatest(rows) {
+      if (!rows || !rows.length) return null;
+      for (let i = rows.length - 1; i >= 0; i--) {
+        if (rows[i] && Object.keys(rows[i]).length) return rows[i];
+      }
+      return null;
+    }
+    async function getLatestRowsForLocation(loc) {
+      if (!loc) return [];
+      if (Array.isArray(loc.latest)) return loc.latest;
+      if (Array.isArray(loc.rows)) return loc.rows;
+      if (Array.isArray(loc.data)) return loc.data;
+      try {
+        if (GF && GF.cfg && GF.cfg.CACHE_PREFIX && (loc.locationId || loc.id)) {
+          const prefix = GF.cfg.CACHE_PREFIX;
+          const key = `${prefix}_sensor_${loc.locationId || loc.id}`;
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            try {
+              const parsed = JSON.parse(raw);
+              if (parsed && Array.isArray(parsed.raw)) return parsed.raw;
+              if (parsed && Array.isArray(parsed.rows)) return parsed.rows;
+              if (parsed && parsed.grouped && parsed.grouped.raw && Array.isArray(parsed.grouped.raw)) return parsed.grouped.raw;
+            } catch (e) { /* ignore parse error */ }
+          }
+        }
+      } catch(e){}
+      try {
+        if (loc.locationId) {
+          const fallback = await loadCachedRowsForLocation(loc.locationId, 14);
+          if (fallback && fallback.length) return fallback;
+        }
+      } catch(e){}
+      return [];
+    }
+      function renderPopupCardHTMLStringFromLocAndRow(loc, latestRow) {
+      const defaultKeys = {
+        water_temp: ['Water Temp (C)','water temp','water_temp','WaterTemp', 'waterTempStr', 'temp'],
+        ec: ['EC (ms/cm)','ec','ec_ms_cm','EC (mS/cm)'],
+        timestamp: ['Timestamp','timestamp','time','ts','created_at']
+      };
+      const keys = {
+        water_temp: (GF && GF.cfg && GF.cfg.KEYS && GF.cfg.KEYS.water_temp) ? GF.cfg.KEYS.water_temp : defaultKeys.water_temp,
+        ec:         (GF && GF.cfg && GF.cfg.KEYS && GF.cfg.KEYS.ec)         ? GF.cfg.KEYS.ec         : defaultKeys.ec,
+        timestamp:  (GF && GF.cfg && GF.cfg.KEYS && GF.cfg.KEYS.timestamp)  ? GF.cfg.KEYS.timestamp  : defaultKeys.timestamp
+      };
+      const mqttLatest = (window.MAP_LIVE_LATEST && window.MAP_LIVE_LATEST[loc.locationId]) ? window.MAP_LIVE_LATEST[loc.locationId] : null;
+      const wtFromMqtt = mqttLatest ? pickFieldFromRow(mqttLatest, keys.water_temp) : null;
+      const ecFromMqtt = mqttLatest ? pickFieldFromRow(mqttLatest, keys.ec) : null;
+    let wtRaw = null, ecRaw = null;
+    try {
+      const mqttLatest = (window.MAP_LIVE_LATEST && window.MAP_LIVE_LATEST[loc.locationId]) ? window.MAP_LIVE_LATEST[loc.locationId] : null;
+      if (mqttLatest) {
+        wtRaw = pickFieldFromRow(mqttLatest, keys.water_temp);
+        ecRaw = pickFieldFromRow(mqttLatest, keys.ec);
+      }
+    } catch(e){ /* ignore */ }
+    if ((wtRaw === null || wtRaw === undefined || wtRaw === '') ||
+        (ecRaw === null || ecRaw === undefined || ecRaw === '')) {
+      try {
+        if (GF && GF.cfg && GF.cfg.CACHE_PREFIX && (loc.locationId || loc.id)) {
+          const prefix = GF.cfg.CACHE_PREFIX;
+          const key = `${prefix}_sensor_${loc.locationId || loc.id}`;
+          const raw = localStorage.getItem(key);
+          if (raw) {
+            const parsed = JSON.parse(raw);
+            const grouped = parsed && parsed.grouped ? parsed.grouped : null;
+            const groups = grouped && grouped.groups ? grouped.groups : null;
+            const kf = groups && (groups.kualitas_fisika || groups['kualitas_fisika']) ? (groups.kualitas_fisika || groups['kualitas_fisika']) : null;
+            if (kf) {
+              if ((wtRaw === null || wtRaw === undefined || wtRaw === '') && kf.water_temp !== undefined) wtRaw = kf.water_temp;
+              if ((ecRaw === null || ecRaw === undefined || ecRaw === '') && kf.ec !== undefined) ecRaw = kf.ec;
+            }
+          }
+        }
+      } catch(e){}
+    }
+    if ((wtRaw === null || wtRaw === undefined || wtRaw === '') && latestRow) {
+      wtRaw = pickFieldFromRow(latestRow, keys.water_temp);
+    }
+    if ((ecRaw === null || ecRaw === undefined || ecRaw === '') && latestRow) {
+      ecRaw = pickFieldFromRow(latestRow, keys.ec);
+    }
+      if (wtRaw === null) {
+        console.warn(`Popup: water_temp not found for ${loc.locationId || loc.name || 'unknown'}. Try debugRowKeys(latestRow) to inspect columns.`);
+        debugRowKeys(latestRow); // uncomment to print full key list
+      }
+      const latVal = latestRow ? (pickFieldFromRow(latestRow, ['Latitude','Lat','latitude']) ?? (loc.coord && loc.coord[0] ? loc.coord[0] : null)) : (loc.coord && loc.coord[0] ? loc.coord[0] : null);
+      const lonVal = latestRow ? (pickFieldFromRow(latestRow, ['Longitude','Lon','longitude']) ?? (loc.coord && loc.coord[1] ? loc.coord[1] : null)) : (loc.coord && loc.coord[1] ? loc.coord[1] : null);
+      const tsVal = latestRow ? (pickFieldFromRow(latestRow, keys.timestamp)) : null;
+      const latTxt = latVal === undefined || latVal === null || latVal === '' ? '--' : String(latVal);
+      const lonTxt = lonVal === undefined || lonVal === null || lonVal === '' ? '--' : String(lonVal);
+      const lastText = tsVal ? (isNaN(new Date(tsVal).getTime()) ? String(tsVal).slice(0,19) : new Date(tsVal).toLocaleString()) : '--';
+      const arrowId = `arrow-pointer-${Date.now()}-${Math.round(Math.random()*1000)}`;
+        const html = `
+          <div style="width:100%;box-sizing:border-box;padding:0.6rem;">
+            <div class="card card-alert" style="box-shadow:0 6px 18px rgba(0,0,0,0.12);border-radius:10px;">
+              <div class="card-body" style="padding:0.6rem;">
+                <div style="display:flex;justify-content:space-between;align-items:start;">
+                  <div style="font-weight:700;color:#222;">${loc.name || loc.label || loc.locationId || 'Lokasi'}</div>
+                </div>
+
+                <div style="display:flex;align-items:center;margin-top:8px;">
+                  <svg width="90" height="60" viewBox="0 0 42 42" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#ffd166" stroke-width="8"></circle>  
+                    <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#256fff" stroke-width="8" stroke-dasharray="20 70" stroke-dashoffset="60" transform="rotate(71 21 21)"></circle>
+                    <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#EDEdED" stroke-width="8" stroke-dasharray="45 75" stroke-dashoffset="60" transform="rotate(-180 21 21)"></circle>
+                    <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#00CCB5" stroke-width="8" stroke-dasharray="25 75" stroke-dashoffset="25" transform="rotate(-80 21 21)"></circle>
+                    <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#ff3b6b" stroke-width="8" stroke-dasharray="14 100" stroke-dashoffset="-5" transform="rotate(-50 21 21)"></circle>
+                    <circle r="15.9155" cx="21" cy="21" fill="transparent" stroke="#140301" stroke-width="8" stroke-dasharray="5 100" stroke-dashoffset="-5" transform="rotate(-0 21 21)"></circle>
+                
+                    <g id="${arrowId}" transform="rotate(40 21 21)">
+                      <line x1="21" y1="21" x2="21" y2="5" stroke="#5E6969" stroke-width="2" stroke-linecap="round"/>
+                      <polygon points="19,5 23,5 21,0" fill="#5E6969"/>
+                      <circle cx="21" cy="21" r="2" fill="#5E6969"/>
+                    </g>
+                  </svg>
+                  <div style="flex:1;margin-left:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                      <div style="font-size:12px;margin-bottom:2px;">Suhu Air</div>
+                      <div class="big-n" style="font-size:18px;font-weight:700;">${fmtNumberLocal(wtRaw,'°C')}</div>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+                      <div style="font-size:12px;">EC (mS/cm)</div>
+                      <div class="field-ec-big" style="font-size:18px;font-weight:700;">${fmtNumberLocal(ecRaw,'')}</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="field-coords" style="font-size:12px;color:#666;margin-top:6px;">${latTxt && lonTxt ? `Lat: ${latTxt}, Lon: ${lonTxt}` : 'Lat: --, Lon: --'}</div>
+              </div>
+            </div>
+          </div>
+        `;
+        return { html, arrowId, waterTempValue: wtRaw };
+      }
+      function openLocationPopup(map, latlng, html) {
+      return L.popup({
+        maxWidth: 320,
+        className: 'custom-location-popup',
+        closeButton: true,
+        closeOnClick: false,
+        autoClose: true,
+        offset: L.point(0, -6)
+      })
+      .setLatLng(latlng)
+      .setContent(html) // no need to wrap in extra <div>
+      .openOn(map);
+    }
+      async function handleMarkerClickShowPopup(map, marker, loc, rowsParam){
+      map.closePopup();
+      const rows = Array.isArray(rowsParam) && rowsParam.length ? rowsParam : await getLatestRowsForLocation(loc);
+      const latest = safeGetLatest(rows) || {};
+      const { html, arrowId, waterTempValue } = renderPopupCardHTMLStringFromLocAndRow(loc, latest);
+      const popup = openLocationPopup(map, marker.getLatLng(), html);
+      setTimeout(()=> {
+        const popupEl = popup.getElement();
+        if (!popupEl) return;
+        const arrowEl = popupEl.querySelector(`#${arrowId}`);
+        if (arrowEl) {
+          const min = 20, max = 38;
+          const tVal = asNumberOrNullLocal(waterTempValue);
+          if (tVal === null) {
+            arrowEl.setAttribute("transform", `rotate(0 21 21)`);
+          } else {
+            const clamped = Math.max(min, Math.min(max, tVal));
+            const t = (clamped - min) / (max - min);
+            const startAngle = -90, endAngle = 180;
+            let angle = startAngle + t * (endAngle - startAngle);
+            angle = ((angle + 180) % 360) - 180;
+            arrowEl.setAttribute("transform", `rotate(${angle} 21 21)`);
+          }
+        }
+      }, 50);
+    }
+    const locations = [];
+      async function loadLocations(){
+        try {
+          const data = await fetchJsonNoStore('../assets/data/locations.json');
+          data.forEach(l => locations.push(l));
+          renderMap();
+        } catch (e) {
+          console.error('Error loading locations.json', e);
+        }
+      }
+    async function renderMap(){
+      const map = L.map('map').setView([-2.645088, 119.085449], 4.5);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+      const ready = await waitFor(()=> window.CLIMBOX_GRAPH_FETCH && typeof window.CLIMBOX_GRAPH_FETCH.fetchSheetViaGviz === 'function', 4000);
+      if (!ready) console.warn('graph-fetch API not ready — chart loading may fail on click.');
+      locations.forEach(loc => {
+        const mk = L.marker(loc.coord).addTo(map);
+        mk.on('click', async (e) => {
+          let rows = null;
+          try {
+            rows = await onLocationClick(loc);
+          } catch(e){
+            console.warn('onLocationClick failed (but continue to popup):', e);
+          }
+          try {
+            await handleMarkerClickShowPopup(map, mk, loc, rows);
+          } catch(err){
+            console.warn('popup handler failed', err);
+          }
+        });
+      });
+      renderLocationList(locations);
+    }
+    function renderLocationList(locs){
+      const ul = document.getElementById('location-list');
+      if (!ul) return;
+      ul.innerHTML = '';
+      locs.forEach(loc => {
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between align-items-center list-group-item-action';
+        li.textContent = loc.name;
+        li.addEventListener('click', async () => {
+          let rows = null;
+          try { rows = await onLocationClick(loc); } catch(e){ console.warn(e); }
+          try { await handleMarkerClickShowPopup(window.map, { getLatLng: ()=>({lat: loc.coord[0], lng: loc.coord[1]}) }, loc, rows); } catch(e){ }
+        });
+        ul.appendChild(li);
+      });
+    }
+    async function onLocationClick(loc){
+      try {
+        if (window.MAP_LIVE && typeof window.MAP_LIVE.setGraphLink === 'function') {
+          window.MAP_LIVE.setGraphLink(loc.locationId, loc.name || loc.locationId);
+        }
+        let rows = null;
+        const gfetch = window.CLIMBOX_GRAPH_FETCH;
+        if (gfetch && loc.sheetId && typeof gfetch.fetchSheetViaGviz === 'function') {
+          try {
+            const sheetName = resolveSheetName(loc);
+            const fetched = await gfetch.fetchSheetViaGviz(loc.sheetId, sheetName);
+            if (Array.isArray(fetched) && fetched.length) {
+              rows = fetched;
+            }
+          } catch (e) {
+            console.warn('GViz fetch failed for', loc.locationId, e);
+          }
+        }
+        if ((!rows || !rows.length)) {
+          const fallback = await loadCachedRowsForLocation(loc.locationId, 14);
+          if (fallback && fallback.length) rows = fallback;
+        }
+        if (rows && Array.isArray(rows) && rows.length) {
+          if (gfetch && typeof gfetch.prepareChartArraysFromRows === 'function') {
+            const prepared = gfetch.prepareChartArraysFromRows(rows, Math.min(20, (gfetch.cfg && gfetch.cfg.HISTORY_POINTS) ? gfetch.cfg.HISTORY_POINTS : 7));
+            if (prepared) {
+              safeSetChart(window.chart1, prepared.labels, prepared.chart1 || []);
+              safeSetChart(window.chart2, prepared.labels, prepared.chart2 || []);
+              safeSetChart(window.chart3, prepared.labels, prepared.chart3 || []);
+            }
+          } else {
+            const last = rows.slice(-7);
+            const labels = last.map(r => {
+              const ts = r.Timestamp || r.timestamp || r.time || r.cachedAt || '';
+              const dt = new Date(ts);
+              if (!isNaN(dt.getTime())) return `${pad(dt.getHours())}:${pad(dt.getMinutes())}:${pad(dt.getSeconds())}`;
+              return String(ts).slice(0,8);
+            });
+            const pick = (r, keys) => {
+              for (const k of keys) {
+                if (r[k] !== undefined) return NumberOrNull(r[k]);
+                const found = Object.keys(r).find(x => x.toLowerCase().trim() === k.toLowerCase().trim());
+                if (found) return NumberOrNull(r[found]);
+              }
+              return null;
+            };
+            const NumberOrNull = v => { if (v === null||v===undefined||v==='') return null; const n = Number(String(v).replace(/,/g,'')); return Number.isFinite(n)?n:null; };
+            const c1_wt = last.map(r => pick(r, ['Water Temp (C)','water temp','water_temp','WaterTemp', 'temp', 'waterTempStr']));
+            const c1_hum = last.map(r => pick(r, ['Humidity','humidity','humid']));
+            const c1_air = last.map(r => pick(r, ['Temp udara','air temp','air_temp','temperature']));
+            safeSetChart(window.chart1, labels, [c1_wt, c1_hum, c1_air]);
+            safeSetChart(window.chart2, labels, [last.map(()=>null), last.map(()=>null)]);
+            safeSetChart(window.chart3, labels, [last.map(()=>null), last.map(()=>null), last.map(()=>null)]);
+          }
+          if (gfetch && typeof gfetch.processRowsAndRenderCards === 'function') {
+            try { gfetch.processRowsAndRenderCards(rows); } catch(e){ console.warn('cards render error', e); }
+          }
+        } else {
+          console.warn('No rows found for location', loc.locationId);
+        }
+        return rows || [];
+      } catch (e) {
+        console.error('onLocationClick error', e);
+        return [];
+      }
+    }
+    loadLocations();
+  </script>
+  <script src="../assets/js/graph-fetch.js"></script>
+  </div>
+  </main>
+  <footer class="footer py-4  ">
+    <div class="container-fluid">
+      <div class="row align-items-center justify-content-lg-between">
+        <div class="col-lg-6 mb-lg-0 mb-4">
+          <div class="copyright text-center text-sm text-muted text-lg-start">
+            © <script>
+              document.write(new Date().getFullYear())
+            </script>,
+            made with <i class="fa fa-heart"></i> by
+            <a href=" " class="font-weight-bold" target="_blank">ClimBox</a>
+            for a better climate.
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <ul class="nav nav-footer justify-content-center justify-content-lg-end">
+            <li class="nav-item">
+              <a href=" " class="nav-link text-muted" target="_blank">Creative Tim</a>
+            </li>
+            <li class="nav-item">
+              <a href=" " class="nav-link text-muted" target="_blank">About Us</a>
+            </li>
+            <li class="nav-item">
+              <a href=" " class="nav-link text-muted" target="_blank">Blog</a>
+            </li>
+            <li class="nav-item">
+              <a href=" " class="nav-link pe-0 text-muted" target="_blank">License</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script src="../assets/js/core/popper.min.js"></script>
+  <script src="../assets/js/core/bootstrap.min.js"></script>
+  <script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="../assets/js/plugins/world.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+  <script>
+    window.addEventListener('DOMContentLoaded', function () {
+      const navbar = document.getElementById('navbarBlur');
+      if (navbar) {
+        navbar.classList.add('position-sticky', 'top-1', 'z-index-sticky');
+        navbar.setAttribute('data-scroll', 'true');
+      }
+      const toggle = document.getElementById('navbarFixed');
+      if (toggle) toggle.checked = true;
+    });
+  </script>
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
+  <script type="module" src="/services/firebase-config.js"></script>
+  <script type="module" src="/services/auth-ui.js"></script>
+  <script type="module" src="/services/setup-users.js"></script>
+  <script type="module" src="/services/firestore-and-profile.js"></script>
+  <script type="module" src="/services/auth-forms-and-profile-ui.js"></script>
+  <script src="../assets/js/notifications.js"></script>
+</body>
+</html>

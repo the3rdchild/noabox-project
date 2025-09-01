@@ -1,0 +1,30 @@
+[
+  { 
+    "locationId": "Climbox1", 
+    "name": "Climbox1", 
+    "coord": [-8.525, 119.501], 
+    "country": "Indonesia", 
+    "sheetId":"1bHejKcwEWU-q760UAeaM-1a0niq4IYpu4VgopLRTc38" 
+  },
+  { 
+    "locationId": "Climbox2", 
+    "name": "Climbox2", 
+    "coord": [-8.525, 122.501],  
+    "country": "Indonesia", 
+    "sheetId":"18whYdsc7nl4fay1e_KWOxc4JO1AHxV_m5Sr-kva_pQQ"
+  },
+  { 
+    "locationId": "Climbox3", 
+    "name": "Climbox3", 
+    "coord": [-9.025, 115.501], 
+    "country": "Indonesia",  
+    "sheetId":"1ZwP9s9nKYyeLQRrPl-qoaxU2ovc9mzqJErRV23qCGhs"
+  },
+  { 
+    "locationId": "noabox", 
+    "name": "Noabox", 
+    "coord": [-6.922562, 107.771342], 
+    "country": "Indonesia", 
+    "sheetId":"1xlBylrfCAQDhCGYq5eWTXBwCTypq8bPpcen4dGRkbIs"
+  }
+]

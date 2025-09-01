@@ -1,0 +1,52 @@
+{
+    "LOCATION_ID": "Climbox1",
+    "HISTORY_POINTS": 20,
+    "LOCATIONS_JSON": "../assets/data/locations.json",
+    "GVIZ_RANGE": "A:Z",
+    "SHEET_NAME_TOKEN_DATE": "{date}",
+    "CACHE_PREFIX": "climbox_cache",
+  
+    "KEYS": {
+      "timestamp": ["Timestamp","timestamp","time","date"],
+      "water_temp": ["Water Temp (C)","water temp","water_temp","water temp (c)","waterTempStr","temp"],
+      "air_temp": ["Temp udara","Air Temp (C)","air temp","air_temp","temperature"],
+      "humidity": ["Air Humidity (%)","Humidity","humidity","humid","Air Humidity"],
+      "tss": ["TSS (V)","tss","tss_v"],
+      "ph": ["pH","ph"],
+      "do": ["DO (ug/L)","do","do_ug_l","dissolved oxygen","dissolved_oxygen"],
+      "ec": ["EC (ms/cm)","ec","ec_ms_cm"],
+      "tds": ["TDS (ppm)","tds","tds_ppm"],
+      "wind_speed": ["Wind Speed (km/h)","wind speed","wind_speed","Wind Speed"],
+      "wind_direction": ["Wind Direction","wind direction","wind_direction"],
+      "rainfall": ["Rainfall (mm)","rainfall","rain fall","Rainfall"],
+      "distance": ["Distance (mm)","Ultrasonic Distance (cm)","Distance (cm)","distance"]
+    },
+  
+    "FIELD_ALIASES": {
+      "water_temp": ["Water Temp (C)","Water Temp","water temp","water_temp","WaterTemp","temp","temperature","waterTempStr"],
+      "distance": ["Distance (mm)","Distance (cm)","Ultrasonic Distance (cm)","distance","dist"],
+      "do": ["DO (ug/L)", "do", "do_ug_l"],
+      "tss": ["TSS (V)", "tss"],
+      "ec": ["EC (ms/cm)", "ec"]
+    },
+  
+    "SENSOR_GROUPS": {
+      "meteorologi": ["wind_direction", "wind_speed", "air_temp", "humidity"],
+      "presipitasi": ["rainfall", "distance"],
+      "kualitas_fisika": ["water_temp", "ec", "latitude", "longitude"],
+      "kualitas_kimia_dasar": ["tds", "ph"],
+      "kualitas_kimia_lanjut": ["do", "pompa_air_laut", "pompa_bilas"],
+      "kualitas_turbiditas": ["tss"]
+    },
+  
+    "MQTT": {
+      "MQTT_WS": "wss://test.mosquitto.org:8081/mqtt",
+      "MQTT_USERNAME": "",
+      "MQTT_PASSWORD": "",
+      "MQTT_TOPIC_BASE": "climbox",
+      "MQTT_SUBSCRIBE_WILDCARD": true,
+      "MQTT_RECONNECT_PERIOD_MS": 5000
+    }
+  
+  }
+  
